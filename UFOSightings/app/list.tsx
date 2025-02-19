@@ -1,8 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
-import Constants from "expo-constants";
-
-const List = () => {
-    return (<View></View>);
-};
+const List = () => {};
 
 export default List;
