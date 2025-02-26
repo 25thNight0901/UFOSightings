@@ -3,6 +3,7 @@ import { ISighting} from "../types";
 import {View, Text, FlatList, Pressable, StyleSheet} from "react-native";
 import Constants from "expo-constants";
 import { Link } from "expo-router";
+import { ScrollView } from "react-native-gesture-handler";
 
 const List = () => {
     const [results, setResults] = useState<ISighting[]>([]);
@@ -18,14 +19,16 @@ const List = () => {
     },[]);
     
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>List of sightings</Text>
-            <FlatList
-                data={results}
-                renderItem={({item}) => <PersonComponent item={item}/>}
-                keyExtractor={item => item.id.toString()}
-            />
-        </View>
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.header}>List of sightings</Text>
+                <FlatList
+                    data={results}
+                    renderItem={({item}) => <PersonComponent item={item}/>}
+                    keyExtractor={item => item.id.toString()}
+                />
+            </View>
+        </ScrollView>
     )
 
 };
