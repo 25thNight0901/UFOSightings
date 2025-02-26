@@ -19,7 +19,24 @@ export default function RootLayout() {
         options={{
           title: "List",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="format-list-bulleted" color={color} size={size} />
+            <MaterialCommunityIcons
+              name="format-list-bulleted"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="report"
+        options={{
+          title: "Report",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="layers-search"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
