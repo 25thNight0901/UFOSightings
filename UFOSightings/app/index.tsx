@@ -12,17 +12,8 @@ import {
 import "leaflet/dist/leaflet.css";
 import L, { LatLngTuple } from "leaflet";
 import { View, Text } from "react-native";
-import { useState } from "react";
-
-interface PointOfInterest {
-  name: string;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-const POINTS_OF_INTEREST: PointOfInterest[] = [];
+import { useEffect, useState } from "react";
+import { ISighting } from "../types";
 
 interface LocationHandlerProps {
   addMarker: (lat: number, lng: number) => void;
@@ -41,8 +32,28 @@ const LocationHandler = ({ addMarker }: LocationHandlerProps) => {
   return null;
 };
 const Index = () => {
-  const [pointsOfInterest, setPointsOfInterest] =
-    useState<PointOfInterest[]>(POINTS_OF_INTEREST);
+  const [results, setResults] = useState<ISighting[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        let result = await fetch(
+          "https://sampleapis.assimilate.be/ufo/sightings"
+        );
+        if (!result.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        let json: ISighting[] = await result.json();
+        setResults(json);
+      } catch (error) {
+        console.error("Error fetching sightings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
   const iconX = L.icon({
     iconUrl:
@@ -50,13 +61,6 @@ const Index = () => {
     iconSize: [48, 48],
     popupAnchor: [-3, 0],
   });
-
-  const addPointOfInterest = (lat: number, lng: number) => {
-    setPointsOfInterest([
-      ...pointsOfInterest,
-      { name: "New Point", location: { latitude: lat, longitude: lng } },
-    ]);
-  };
 
   return (
     <MapContainer
@@ -76,8 +80,7 @@ const Index = () => {
         // attribution='&copy; <a href="https://www.openstreretmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <LocationHandler addMarker={(lat, lng) => addPointOfInterest(lat, lng)} />
-      {pointsOfInterest.map((point, index) => (
+      {results.map((point, index) => (
         <Marker
           key={index}
           position={[point.location.latitude, point.location.longitude]}
@@ -85,7 +88,8 @@ const Index = () => {
         >
           <Popup>
             <View style={{ backgroundColor: "white", padding: 10, width: 100 }}>
-              <Text>{point.name}</Text>
+              <Text>{point.witnessName}</Text>
+              <Text>{point.status}</Text>
             </View>
           </Popup>
         </Marker>
