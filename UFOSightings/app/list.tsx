@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { ISighting} from "../types";
-import {View, Button, Text, ActivityIndicator, FlatList, Pressable} from "react-native";
+import {View, Text, FlatList, Pressable} from "react-native";
 import Constants from "expo-constants";
+import { Link } from "expo-router";
 
 const List = () => {
     const [results, setResults] = useState<ISighting[]>([]);
@@ -39,13 +40,21 @@ const List = () => {
 const PersonComponent = ({item} : {item: ISighting}) => {
     return (
         <View>
-            <Pressable style={{flexDirection: "row", alignItems: "center", padding: 10}}>
-                <Text style={{flex: 1}}>{item.id}</Text>
-                <Text style={{flex: 1}}>{item.witnessName}</Text>
-                <Text style={{flex: 1}}>{item.status}</Text>
-                <Text style={{flex: 1}}>{item.dateTime.toString()}</Text>
-            </Pressable>
+            <Link
+                href={{
+                    pathname: "/details/[id]",
+                    params: { id: item.id}
+                }} asChild>
+                    
+                <Pressable style={{flexDirection: "row", alignItems: "center", padding: 10}}>
+                    <Text style={{flex: 1}}>{item.id}</Text>
+                    <Text style={{flex: 1}}>{item.witnessName}</Text>
+                    <Text style={{flex: 1}}>{item.status}</Text>
+                    <Text style={{flex: 1}}>{item.dateTime.toString()}</Text>
+                </Pressable>
+            </Link>
         </View>
+
     )
 }
 
