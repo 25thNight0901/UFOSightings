@@ -26,6 +26,7 @@ export default function RootLayout() {
       <Tabs.Screen
         name="details/[id]"
         options={{
+          headerShown: false,
           href:null
         }}
       />
