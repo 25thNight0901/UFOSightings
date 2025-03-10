@@ -1,59 +1,13 @@
 "use dom";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  SVGOverlay,
-  TileLayer,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, { LatLngTuple } from "leaflet";
+import L from "leaflet";
 import { View, Text } from "react-native";
-import { useEffect, useState } from "react";
-import { ISighting } from "../types";
+import { useUFO } from "../ufoContext";
 
-interface LocationHandlerProps {
-  addMarker: (lat: number, lng: number) => void;
-}
-
-const LocationHandler = ({ addMarker }: LocationHandlerProps) => {
-  const map = useMapEvents({
-    dragend: () => {
-      console.log(map.getCenter());
-    },
-    click: (e) => {
-      addMarker(e.latlng.lat, e.latlng.lng);
-    },
-  });
-
-  return null;
-};
 const Index = () => {
-  const [results, setResults] = useState<ISighting[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        let result = await fetch(
-          "https://sampleapis.assimilate.be/ufo/sightings"
-        );
-        if (!result.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        let json: ISighting[] = await result.json();
-        setResults(json);
-      } catch (error) {
-        console.error("Error fetching sightings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+  const { sightings, loading } = useUFO();
 
   const iconX = L.icon({
     iconUrl:
@@ -61,6 +15,10 @@ const Index = () => {
     iconSize: [48, 48],
     popupAnchor: [-3, 0],
   });
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <MapContainer
@@ -80,7 +38,7 @@ const Index = () => {
         // attribution='&copy; <a href="https://www.openstreretmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {results.map((point, index) => (
+      {sightings.map((point, index) => (
         <Marker
           key={index}
           position={[point.location.latitude, point.location.longitude]}
