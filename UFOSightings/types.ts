@@ -1,15 +1,15 @@
 export interface ISighting {
-    id:             number;
-    witnessName:    string;
-    location:       Location;
-    description:    string;
-    picture:        string;
-    status:         string;
-    dateTime:       Date;
-    witnessContact: string;
+  id: number;
+  witnessName: string;
+  location: ILocation;
+  description: string;
+  picture: string;
+  status: string;
+  dateTime: string;
+  witnessContact: string;
 }
 
-export interface Location {
-    latitude:  number;
-    longitude: number;
+export interface ILocation {
+  latitude: number;
+  longitude: number;
 }

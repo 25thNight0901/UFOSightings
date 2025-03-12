@@ -3,28 +3,16 @@ import { ISighting } from "../types";
 import { View, Text, FlatList, Pressable, StyleSheet } from "react-native";
 import Constants from "expo-constants";
 import { Link } from "expo-router";
-import { ScrollView } from "react-native-gesture-handler";
+import { useUFO } from "../ufoContext";
 
 const List = () => {
-  const [results, setResults] = useState<ISighting[]>([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      let result = await fetch(
-        "https://sampleapis.assimilate.be/ufo/sightings"
-      );
-      let json: ISighting[] = await result.json();
-
-      setResults(json);
-    };
-    loadData();
-  }, []);
+  const { sightings, loading } = useUFO();
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>List of sightings</Text>
       <FlatList
-        data={results}
+        data={sightings}
         renderItem={({ item }) => <PersonComponent item={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -54,6 +42,7 @@ const PersonComponent = ({ item }: { item: ISighting }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 10,
   },
   header: {
