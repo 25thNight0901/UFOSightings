@@ -1,14 +1,25 @@
 import { useEffect, useState, useContext } from "react";
 import * as Location from "expo-location";
-import { Alert, View, StyleSheet, Text, TextInput, Button } from "react-native";
-import { ILocation } from "../types";
+import {
+  Alert,
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  Button,
+  Switch,
+} from "react-native";
+import { ILocation, ISighting } from "../types";
+import { useUFO } from "../ufoContext";
 
 const report = () => {
+  const { addReport, sightings } = useUFO();
   const [witnessName, setWitnessName] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState<ILocation | null>(null);
   const [timestamp, setTimestamp] = useState("");
+  const [statusConfirmed, setStatusConfirmed] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -31,8 +42,26 @@ const report = () => {
       Alert.alert("Error", "All fields are required.");
       return;
     }
-    Alert.alert("Submitted", "Your report has been recorded.");
-    console.log({ witnessName, description, email, location, timestamp });
+
+    const newReport: ISighting = {
+      id: sightings.length + 1,
+      witnessName,
+      location: location
+        ? { latitude: location.latitude, longitude: location.longitude }
+        : { latitude: 0, longitude: 0 },
+      description: description,
+      picture: "",
+      status: statusConfirmed ? "confirmed" : "unconfirmed",
+      dateTime: timestamp,
+      witnessContact: email,
+    };
+    addReport(newReport);
+
+    setWitnessName("");
+    setDescription("");
+    setEmail("");
+    setStatusConfirmed(false);
+    Alert.alert("Success", "Your report has been submitted.");
   };
 
   return (
@@ -59,14 +88,14 @@ const report = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
       />
-
-      {location && (
-        <Text style={styles.info}>
-          Location: {location.latitude}, {location.longitude}
-        </Text>
-      )}
-      <Text style={styles.info}>Time: {timestamp}</Text>
-
+      <View style={styles.switchContainer}>
+        <Text style={styles.label}>Status:</Text>
+        <Text>{statusConfirmed ? "Confirmed" : "Unconfirmed"}</Text>
+        <Switch
+          value={statusConfirmed}
+          onValueChange={setStatusConfirmed}
+        ></Switch>
+      </View>
       <Button title="Submit Report" onPress={handleSubmit} />
     </View>
   );
@@ -94,6 +123,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 14,
     color: "gray",
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
   },
 });
 export default report;

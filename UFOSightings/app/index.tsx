@@ -24,6 +24,7 @@ const Index = () => {
     <MapContainer
       center={{ lat: 51.505, lng: -0.09 }}
       zoom={13}
+      minZoom={3}
       scrollWheelZoom={false}
       style={{
         width: "100%",

@@ -5,7 +5,7 @@ export interface ISighting {
   description: string;
   picture: string;
   status: string;
-  dateTime: Date;
+  dateTime: string;
   witnessContact: string;
 }
 
