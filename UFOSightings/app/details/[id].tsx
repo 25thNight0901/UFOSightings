@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { ISighting} from "../../types";
-import {View, Text, StyleSheet, Image} from "react-native";
+import {View, Text, StyleSheet, Image, ScrollView} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 const Details = () => {
@@ -22,19 +22,23 @@ const Details = () => {
     },[id]);
     
     return (
+        <ScrollView>
         <View style={styles.card}>
             {sighting? (
                 <>
                 <Text style={styles.header}>Sighting number: {sighting.id}</Text>
-                <Text>
                 <Image style={styles.image} source={{uri: sighting.picture}}></Image>
-                    <Text style={styles.cardText}>{sighting.status.toUpperCase()}</Text>
-                </Text>
                 <Text style={styles.cardText}>{sighting.description}</Text>
-                <Text style={styles.cardText}>Latitude: {sighting.location.latitude}, Longitude {sighting.location.longitude}</Text>
-                <Text style={styles.cardText}>{new Date(sighting.dateTime).toLocaleDateString()}</Text>
-                <Text style={styles.cardText}>{sighting.witnessName}</Text>
-                <Text style={styles.cardText}>Contact: {sighting.witnessContact}</Text>
+                { sighting.status == "confirmed"  ? 
+                    <Text style={styles.cardTextConfirmed}><b>Status: </b>{sighting.status.charAt(0).toUpperCase() + sighting.status.slice(1, sighting.status.length)}</Text>
+                : 
+                    <Text style={styles.cardTextUnconfirmed}>{sighting.status.charAt(0).toUpperCase() + sighting.status.slice(1, sighting.status.length)}</Text>
+                }
+                <Text style={styles.cardText}><b>Latitude:</b> {sighting.location.latitude}</Text>
+                <Text style={styles.cardText}><b>Longitude:</b> {sighting.location.longitude}</Text>
+                <Text style={styles.cardText}><b>Date:</b> {new Date(sighting.dateTime).toLocaleDateString()}</Text>
+                <Text style={styles.cardText}><b>Name:</b>{sighting.witnessName}</Text>
+                <Text style={styles.cardText}><b>Contact: </b>{sighting.witnessContact}</Text>
                 </>
             ) : (
                 <>
@@ -42,9 +46,8 @@ const Details = () => {
                 </>
             )}
         </View>
+        </ScrollView>
     )
- // maybe add coords as a button feature that takes the user to that poi.
- // or transform coords to a city for readability
 };
 
 const styles = StyleSheet.create({
@@ -62,18 +65,30 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowRadius: 4
       },
-      cardText: {
-        textAlign: "center",
+      cardTextConfirmed: {
         fontSize: 20,
         fontWeight: "semibold",
-        paddingVertical: 10
+        paddingVertical: 10,
+        color: "green"
+      },
+      cardTextUnconfirmed: {
+        fontSize: 20,
+        fontWeight: "semibold",
+        paddingVertical: 10,
+        color: "red"
+      },
+      cardText: {
+        fontSize: 20,
+        fontWeight: "semibold",
+        paddingVertical: 10,
       },
       image: {
-        width: 100,
-        height: 100,
+        width: 300,
+        height: 300,
         resizeMode: "contain",
+        alignSelf: "center"
       }
 });
 

@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { hide } from "expo-router/build/utils/splash";
 
 export default function RootLayout() {
   return (

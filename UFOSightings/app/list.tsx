@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ISighting } from "../types";
 import { View, Text, FlatList, Pressable, StyleSheet } from "react-native";
-import Constants from "expo-constants";
 import { Link } from "expo-router";
-import { ScrollView } from "react-native-gesture-handler";
 
 const List = () => {
   const [results, setResults] = useState<ISighting[]>([]);
@@ -54,6 +52,7 @@ const PersonComponent = ({ item }: { item: ISighting }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 10,
   },
   header: {
