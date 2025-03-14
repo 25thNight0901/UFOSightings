@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ISighting } from "../types";
 import { View, Text, FlatList, Pressable, StyleSheet } from "react-native";
-import Constants from "expo-constants";
 import { Link } from "expo-router";
 import { useUFO } from "../ufoContext";
 
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-  },
+  }
 });
 
 export default List;
