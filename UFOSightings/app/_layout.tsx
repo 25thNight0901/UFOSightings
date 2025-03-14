@@ -41,14 +41,14 @@ export default function RootLayout() {
             ),
           }}
         />
-      </Tabs>
-      <Tabs.Screen
+        <Tabs.Screen
         name="details/[id]"
         options={{
           headerShown: false,
           href:null
         }}
-      />
+        />
+      </Tabs>
     </UFOProvider>
   );
 }

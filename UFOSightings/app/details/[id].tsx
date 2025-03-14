@@ -6,13 +6,9 @@ import { useUFO } from "../../ufoContext";
 
 const Details = () => {
     const { id } = useLocalSearchParams(); 
-    const { sightings, loading } = useUFO();
+    const { sightings } = useUFO();
 
-    if (loading) {
-        return <Text>Loading...</Text>;
-    }
-
-    const sighting = sightings.find((s: ISighting) => s.id === +id);
+    const sighting = sightings.find((s: ISighting) => s.id === +id)
 
     return (
         <ScrollView>
