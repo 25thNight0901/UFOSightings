@@ -2,25 +2,18 @@ import React, {useEffect, useState} from "react";
 import { ISighting} from "../../types";
 import {View, Text, StyleSheet, Image, ScrollView} from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { useUFO } from "../../ufoContext";
 
 const Details = () => {
     const { id } = useLocalSearchParams(); 
-    const [sighting, setSighting] = useState<ISighting>();
+    const { sightings, loading } = useUFO();
 
-    useEffect(()=>{
-        const loadData = async() => {
-        try{
-            let result = await fetch(`https://sampleapis.assimilate.be/ufo/sightings/${id}`); //fetch by id
-            let json : ISighting = await result.json();
-            setSighting(json);
-        } catch{Error}{
-            console.error("Error fetching sighting:",console.error(Error) // fix correct error handling logic and render
-            );
-        }
-        }
-        if(id) loadData();
-    },[id]);
-    
+    if (loading) {
+        return <Text>Loading...</Text>;
+    }
+
+    const sighting = sightings.find((s: ISighting) => s.id === +id);
+
     return (
         <ScrollView>
         <View style={styles.card}>
