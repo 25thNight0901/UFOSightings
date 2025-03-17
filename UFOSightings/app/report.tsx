@@ -55,7 +55,7 @@ const report = () => {
   };
 
   const handleSubmit = () => {
-    if (!witnessName || !description || !email) {
+    if (!witnessName || !description || !email || !imageUri) {
       Alert.alert("Error", "All fields are required.");
       return;
     }
@@ -78,9 +78,11 @@ const report = () => {
     setDescription("");
     setEmail("");
     setStatusConfirmed(false);
-    setImageUri("");
+    setImageUri(null);
     Alert.alert("Success", "Your report has been submitted.");
   };
+
+  const isFormValid = witnessName && description && email && imageUri;
 
   return (
     <View style={styles.container}>
@@ -157,7 +159,11 @@ const report = () => {
         ></Switch>
       </View>
 
-      <Button title="Submit Report" onPress={handleSubmit} />
+      <Button
+        title="Submit Report"
+        onPress={handleSubmit}
+        disabled={!isFormValid}
+      />
     </View>
   );
 };
