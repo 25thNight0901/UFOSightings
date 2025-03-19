@@ -2,8 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { ISighting } from "./types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
 interface UFOContextType {
   sightings: ISighting[];
   loading: boolean;
@@ -19,24 +17,28 @@ export const UFOProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
     const loadData = async () => {
       setLoading(true);
       try {
         const storedData = await AsyncStorage.getItem("sightings");
-        let localSightings: ISighting[] = storedData ? JSON.parse(storedData) : [];
+        let localSightings: ISighting[] = storedData
+          ? JSON.parse(storedData)
+          : [];
 
-        let result = await fetch("https://sampleapis.assimilate.be/ufo/sightings"/*, { signal} */);
+        let result = await fetch(
+          "https://sampleapis.assimilate.be/ufo/sightings"
+        );
         if (!result.ok) {
           throw new Error("Failed to fetch data.");
         }
         let newSightings: ISighting[] = await result.json();
-        
+
         let mergedSightings = mergeData(localSightings, newSightings);
 
-        await AsyncStorage.setItem("sightings", JSON.stringify(mergedSightings));
+        await AsyncStorage.setItem(
+          "sightings",
+          JSON.stringify(mergedSightings)
+        );
 
         setSightings(mergedSightings);
       } catch (error) {
@@ -49,22 +51,21 @@ export const UFOProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     loadData();
-
-    return () => {
-      controller.abort();
-    };
   }, []);
 
   const addReport = (report: ISighting) => {
-    try{
+    try {
       setSightings((prevSightings) => {
         const updatedSightings = [...prevSightings, report];
 
-        AsyncStorage.setItem("sightings", JSON.stringify(updatedSightings)).catch(console.error);
+        AsyncStorage.setItem(
+          "sightings",
+          JSON.stringify(updatedSightings)
+        ).catch(console.error);
 
         return updatedSightings;
       });
-    } catch (error){
+    } catch (error) {
       console.error("Failed to save new report:", error);
     }
   };
@@ -77,7 +78,7 @@ export const UFOProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 function mergeData(localData: ISighting[], newData: ISighting[]): ISighting[] {
-  let localDataMap = new Map(localData.map((item) => [item.id, item])); //TODO understand what the key list is exactly
+  let localDataMap = new Map(localData.map((item) => [item.id, item]));
   let newDataMap = new Map(newData.map((item) => [item.id, item]));
 
   newDataMap.forEach((newItem, id) => {
