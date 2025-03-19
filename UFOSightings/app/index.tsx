@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { View, Text } from "react-native";
 import { useUFO } from "../ufoContext";
+import { Link } from "expo-router";
 
 const Index = () => {
   const { sightings, loading } = useUFO();
@@ -46,10 +47,20 @@ const Index = () => {
           icon={iconX}
         >
           <Popup>
-            <View style={{ backgroundColor: "white", padding: 10, width: 100 }}>
-              <Text>{point.witnessName}</Text>
-              <Text>{point.status}</Text>
-            </View>
+            <Link
+              href={{
+                pathname: "/details/[id]",
+                params: { id: point.id },
+              }}
+              asChild
+            >
+              <View
+                style={{ backgroundColor: "white", padding: 10, width: 100 }}
+              >
+                <Text>{point.witnessName}</Text>
+                <Text>{point.status}</Text>
+              </View>
+            </Link>
           </Popup>
         </Marker>
       ))}
